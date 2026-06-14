@@ -1,2 +1,8 @@
 # docs
 docs/sentinel-planejamento-completo.pdf
+
+# AI operational memory (local context for assisted development)
+.ai/
+
+# Cursor local config (skills, rules — not versioned)
+.cursor/
