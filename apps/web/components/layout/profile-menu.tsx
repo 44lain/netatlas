@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { Menu } from "@base-ui/react/menu";
-import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
-import { logout } from "@/app/(auth)/actions";
+import { ChevronsUpDown, Settings, User } from "lucide-react";
+import { LogoutButton } from "@/components/auth/logout-button";
 import { cn } from "@/lib/utils";
 
 interface ProfileMenuProps {
@@ -74,17 +74,7 @@ export function ProfileMenu({ email, displayName }: ProfileMenuProps) {
 
             <Menu.Separator className="bg-border -mx-1.5 my-1 h-px" />
 
-            <Menu.Item
-              render={
-                <form action={logout}>
-                  <button type="submit" className="w-full" />
-                </form>
-              }
-              className="text-danger data-[highlighted]:bg-danger/10 flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm outline-none"
-            >
-              <LogOut className="size-4" />
-              Sair
-            </Menu.Item>
+            <LogoutButton variant="menu" />
           </Menu.Popup>
         </Menu.Positioner>
       </Menu.Portal>
