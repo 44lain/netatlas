@@ -1,4 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LogoutButton } from "@/components/auth/logout-button";
 import { ChangePasswordForm } from "./change-password-form";
 
 interface SecuritySectionProps {
@@ -22,6 +23,14 @@ export function SecuritySection({ email }: SecuritySectionProps) {
           <p className="text-caption">
             Em breve você poderá ver e revogar sessões em outros dispositivos.
           </p>
+        </div>
+
+        <div className="border-border space-y-3 rounded-lg border p-4">
+          <div>
+            <p className="text-sm font-medium">Encerrar sessão</p>
+            <p className="text-caption">Sai deste dispositivo e retorna à tela de login.</p>
+          </div>
+          <LogoutButton />
         </div>
       </CardContent>
     </Card>
