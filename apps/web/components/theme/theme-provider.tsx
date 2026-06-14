@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 
 export type ThemePreference = "system" | "light" | "dark";
 
@@ -14,13 +21,24 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
+type ThemeSnapshot = {
+  preference: ThemePreference;
+  resolved: "light" | "dark";
+};
+
+const listeners = new Set<() => void>();
+
+function emitThemeChange() {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
 function getSystemTheme(): "light" | "dark" {
-  if (typeof window === "undefined") return "dark";
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 function readStoredPreference(): ThemePreference {
-  if (typeof window === "undefined") return "system";
   const stored = localStorage.getItem(THEME_STORAGE_KEY) as ThemePreference | null;
   return stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
 }
@@ -30,34 +48,51 @@ function resolveTheme(preference: ThemePreference): "light" | "dark" {
   return preference;
 }
 
+function getThemeSnapshot(): ThemeSnapshot {
+  const preference = readStoredPreference();
+  return { preference, resolved: resolveTheme(preference) };
+}
+
+/** Snapshot estável no SSR e durante a hidratação — evita mismatch. */
+function getServerThemeSnapshot(): ThemeSnapshot {
+  return { preference: "system", resolved: "dark" };
+}
+
+function subscribeToTheme(onStoreChange: () => void) {
+  listeners.add(onStoreChange);
+
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const onMediaChange = () => onStoreChange();
+  const onStorageChange = () => onStoreChange();
+
+  media.addEventListener("change", onMediaChange);
+  window.addEventListener("storage", onStorageChange);
+
+  return () => {
+    listeners.delete(onStoreChange);
+    media.removeEventListener("change", onMediaChange);
+    window.removeEventListener("storage", onStorageChange);
+  };
+}
+
 function applyTheme(resolved: "light" | "dark") {
   document.documentElement.classList.toggle("dark", resolved === "dark");
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [preference, setPreferenceState] = useState<ThemePreference>(readStoredPreference);
-  const [resolved, setResolved] = useState<"light" | "dark">(() =>
-    resolveTheme(readStoredPreference())
+  const { preference, resolved } = useSyncExternalStore(
+    subscribeToTheme,
+    getThemeSnapshot,
+    getServerThemeSnapshot
   );
 
   useEffect(() => {
     applyTheme(resolved);
   }, [resolved]);
 
-  useEffect(() => {
-    if (preference !== "system") return;
-
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = () => setResolved(getSystemTheme());
-
-    media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
-  }, [preference]);
-
   const setPreference = useCallback((next: ThemePreference) => {
-    setPreferenceState(next);
     localStorage.setItem(THEME_STORAGE_KEY, next);
-    setResolved(resolveTheme(next));
+    emitThemeChange();
   }, []);
 
   const value = useMemo(
