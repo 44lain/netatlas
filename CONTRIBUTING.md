@@ -1,6 +1,6 @@
-# Contribuindo com o Sentinel
+# Contribuindo com o NetAtlas
 
-Obrigado por considerar contribuir com o Sentinel! Este guia resume as convenções do projeto.
+Obrigado por considerar contribuir com o NetAtlas! Este guia resume as convenções do projeto.
 
 ---
 
@@ -8,16 +8,16 @@ Obrigado por considerar contribuir com o Sentinel! Este guia resume as convenç�
 
 Commits devem seguir [Conventional Commits](https://www.conventionalcommits.org/) **em português**:
 
-| Tipo | Uso |
-|------|-----|
-| `feat:` | Nova funcionalidade |
-| `fix:` | Correção de bug |
-| `docs:` | Documentação |
-| `chore:` | Configuração, setup, dependências |
-| `test:` | Testes |
+| Tipo        | Uso                                      |
+| ----------- | ---------------------------------------- |
+| `feat:`     | Nova funcionalidade                      |
+| `fix:`      | Correção de bug                          |
+| `docs:`     | Documentação                             |
+| `chore:`    | Configuração, setup, dependências        |
+| `test:`     | Testes                                   |
 | `refactor:` | Refatoração sem mudança de comportamento |
-| `style:` | Formatação, sem mudança de lógica |
-| `perf:` | Melhoria de performance |
+| `style:`    | Formatação, sem mudança de lógica        |
+| `perf:`     | Melhoria de performance                  |
 
 **Exemplos:**
 
@@ -32,13 +32,13 @@ chore: configurar ESLint e Prettier no monorepo
 
 ## Branches
 
-| Padrão | Uso |
-|--------|-----|
-| `main` | Branch principal protegida — sem push direto |
-| `feature/*` | Novas funcionalidades (`feature/auth-login`) |
-| `fix/*` | Correções de bugs (`fix/session-persistence`) |
-| `docs/*` | Apenas documentação (`docs/readme-setup`) |
-| `chore/*` | Manutenção e tooling (`chore/ci-workflow`) |
+| Padrão      | Uso                                           |
+| ----------- | --------------------------------------------- |
+| `main`      | Branch principal protegida — sem push direto  |
+| `feature/*` | Novas funcionalidades (`feature/auth-login`)  |
+| `fix/*`     | Correções de bugs (`fix/session-persistence`) |
+| `docs/*`    | Apenas documentação (`docs/readme-setup`)     |
+| `chore/*`   | Manutenção e tooling (`chore/ci-workflow`)    |
 
 Fluxo: branch a partir de `main` → PR → CI verde → merge.
 

@@ -1,4 +1,4 @@
-# Sentinel
+# NetAtlas
 
 **Network Discovery & Monitoring Platform**
 
@@ -13,11 +13,11 @@ Plataforma open source para descoberta, inventário e monitoramento de redes loc
 
 ### Nome
 
-**Sentinel** — Network Discovery & Monitoring Platform
+**NetAtlas** — Network Discovery & Monitoring Platform
 
 ### Descrição
 
-O Sentinel é uma plataforma self-hosted composta por uma aplicação web (Next.js + Supabase) e um agente coletor local em Python/Nmap. Juntos, eles descobrem dispositivos na rede, escaneiam portas abertas, classificam riscos de segurança e mantêm um inventário histórico acessível via dashboard.
+O NetAtlas é uma plataforma self-hosted composta por uma aplicação web (Next.js + Supabase) e um agente coletor local em Python/Nmap. Juntos, eles descobrem dispositivos na rede, escaneiam portas abertas, classificam riscos de segurança e mantêm um inventário histórico acessível via dashboard.
 
 ### Objetivo
 
@@ -25,7 +25,7 @@ Oferecer visibilidade prática sobre redes domésticas e de pequenas empresas �
 
 ### Motivação
 
-Redes locais frequentemente carecem de observabilidade. Roteadores não mostram o quadro completo; ferramentas enterprise são caras ou excessivas para homelabs e PMEs. O Sentinel preenche essa lacuna com uma stack moderna, código aberto e fluxo de uso simples: instalar o agente, executar um scan, visualizar resultados no dashboard.
+Redes locais frequentemente carecem de observabilidade. Roteadores não mostram o quadro completo; ferramentas enterprise são caras ou excessivas para homelabs e PMEs. O NetAtlas preenche essa lacuna com uma stack moderna, código aberto e fluxo de uso simples: instalar o agente, executar um scan, visualizar resultados no dashboard.
 
 ---
 
@@ -41,16 +41,16 @@ Redes locais frequentemente carecem de observabilidade. Roteadores não mostram 
 
 ### Planejadas (MVP v1.0.0)
 
-| Área | Funcionalidades |
-|------|-----------------|
-| **Autenticação** | Cadastro, login, logout, recuperação de senha via Supabase Auth |
-| **Dashboard** | Métricas de rede, dispositivos recentes, gráfico de histórico, skeleton loading |
-| **Sentinel Agent** | CLI Python, descoberta ARP/ping, scan Nmap, envio via API REST |
-| **Inventário** | Listagem com busca/filtros, detalhe de dispositivo, histórico de scans |
-| **Riscos** | Motor de classificação (Baixo/Médio/Alto), painel e detalhe com recomendações |
-| **Agentes** | Registro com token, listagem de status, revogação |
-| **Exportação** | Download de scans em JSON e CSV |
-| **Demo** | Página pública com dados fictícios |
+| Área               | Funcionalidades                                                                 |
+| ------------------ | ------------------------------------------------------------------------------- |
+| **Autenticação**   | Cadastro, login, logout, recuperação de senha via Supabase Auth                 |
+| **Dashboard**      | Métricas de rede, dispositivos recentes, gráfico de histórico, skeleton loading |
+| **NetAtlas Agent** | CLI Python, descoberta ARP/ping, scan Nmap, envio via API REST                  |
+| **Inventário**     | Listagem com busca/filtros, detalhe de dispositivo, histórico de scans          |
+| **Riscos**         | Motor de classificação (Baixo/Médio/Alto), painel e detalhe com recomendações   |
+| **Agentes**        | Registro com token, listagem de status, revogação                               |
+| **Exportação**     | Download de scans em JSON e CSV                                                 |
+| **Demo**           | Página pública com dados fictícios                                              |
 
 ### Futuras (pós-MVP)
 
@@ -67,7 +67,7 @@ Redes locais frequentemente carecem de observabilidade. Roteadores não mostram 
 
 ```
 ┌─────────────────┐         HTTPS / REST          ┌──────────────────────┐
-│  Sentinel Agent │  ───────────────────────────►   │   Web App (Next.js)  │
+│  NetAtlas Agent │  ───────────────────────────►   │   Web App (Next.js)  │
 │  Python + Nmap  │   Bearer Token (agente)       │   Vercel             │
 │  Rede local     │                               │   Route Handlers     │
 └─────────────────┘                               └──────────┬───────────┘
@@ -84,7 +84,7 @@ Redes locais frequentemente carecem de observabilidade. Roteadores não mostram 
 
 Aplicação Next.js 16 (App Router) hospedada na Vercel. Responsável pela interface do usuário, autenticação via Supabase SSR, APIs REST para o agente e processamento do motor de riscos no backend.
 
-### Sentinel Agent
+### NetAtlas Agent
 
 CLI Python que roda na rede local do usuário. Executa descoberta de hosts (ARP + ping sweep), scan de portas via Nmap e envia resultados autenticados para a plataforma.
 
@@ -95,7 +95,7 @@ Backend-as-a-Service: autenticação de usuários, banco PostgreSQL com Row Leve
 ### Fluxo de dados
 
 1. Usuário registra um agente no dashboard e recebe um token Bearer (exibido uma única vez).
-2. Agente executa `sentinel scan --token TOKEN --api URL`.
+2. Agente executa `netatlas scan --token TOKEN --api URL`.
 3. Agente valida conectividade (`GET /api/health`), cria scan (`POST /api/scans`).
 4. Discovery identifica hosts; Nmap escaneia portas por dispositivo.
 5. Agente envia dispositivos e portas (`POST /api/devices`).
@@ -107,28 +107,28 @@ Backend-as-a-Service: autenticação de usuários, banco PostgreSQL com Row Leve
 
 ## Stack
 
-| Camada | Tecnologias |
-|--------|-------------|
-| **Frontend** | Next.js 16, TypeScript, Tailwind CSS, shadcn/ui |
-| **Backend** | Next.js Route Handlers, Supabase (Auth + Postgres) |
-| **Agente** | Python 3.11+, Nmap, subprocess / nmap3 |
-| **Infra** | Vercel, Supabase, GitHub Actions |
-| **Testes** | Vitest, pytest, Playwright |
-| **Monorepo** | Turborepo |
+| Camada       | Tecnologias                                        |
+| ------------ | -------------------------------------------------- |
+| **Frontend** | Next.js 16, TypeScript, Tailwind CSS, shadcn/ui    |
+| **Backend**  | Next.js Route Handlers, Supabase (Auth + Postgres) |
+| **Agente**   | Python 3.11+, Nmap, subprocess / nmap3             |
+| **Infra**    | Vercel, Supabase, GitHub Actions                   |
+| **Testes**   | Vitest, pytest, Playwright                         |
+| **Monorepo** | Turborepo                                          |
 
 ---
 
 ## Roadmap
 
-| Sprint | Semanas | Objetivo | Versão |
-|--------|---------|----------|--------|
-| **1** | 1–2 | Fundação: setup, auth, layout, dark mode, CI | v0.1.0-alpha |
-| **2** | 3–4 | Dashboard, métricas, APIs REST do agente | v0.2.0-alpha |
-| **3** | 5–6 | Sentinel Agent: CLI, ARP, Nmap, MAC/hostname | v0.3.0-alpha |
-| **4** | 7–8 | Integração agente ↔ plataforma, inventário | v0.4.0-beta |
-| **5** | 9–10 | Histórico de scans, motor de riscos | v0.5.0-beta |
-| **6** | 11–12 | Comparação de scans, gráficos, export, demo | v0.6.0-rc |
-| **7** | 13–14 | E2E, documentação, CI/CD, produção | v1.0.0 |
+| Sprint | Semanas | Objetivo                                     | Versão       |
+| ------ | ------- | -------------------------------------------- | ------------ |
+| **1**  | 1–2     | Fundação: setup, auth, layout, dark mode, CI | v0.1.0-alpha |
+| **2**  | 3–4     | Dashboard, métricas, APIs REST do agente     | v0.2.0-alpha |
+| **3**  | 5–6     | NetAtlas Agent: CLI, ARP, Nmap, MAC/hostname | v0.3.0-alpha |
+| **4**  | 7–8     | Integração agente ↔ plataforma, inventário   | v0.4.0-beta  |
+| **5**  | 9–10    | Histórico de scans, motor de riscos          | v0.5.0-beta  |
+| **6**  | 11–12   | Comparação de scans, gráficos, export, demo  | v0.6.0-rc    |
+| **7**  | 13–14   | E2E, documentação, CI/CD, produção           | v1.0.0       |
 
 **Estimativa total:** 14 semanas · ~196h · sprints de 2 semanas
 
@@ -149,19 +149,19 @@ Backend-as-a-Service: autenticação de usuários, banco PostgreSQL com Row Leve
 ### Web App (em breve)
 
 ```bash
-git clone https://github.com/seu-usuario/sentinel.git
-cd sentinel
+git clone https://github.com/seu-usuario/netatlas.git
+cd netatlas
 cp .env.example .env.local
 # Preencher NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY
 npm install
 npm run dev
 ```
 
-### Sentinel Agent (em breve)
+### NetAtlas Agent (em breve)
 
 ```bash
-pip install sentinel-agent
-sentinel scan --token SEU_TOKEN --api https://sua-instancia.vercel.app
+pip install netatlas-agent
+netatlas scan --token SEU_TOKEN --api https://sua-instancia.vercel.app
 ```
 
 ### Supabase
@@ -198,5 +198,5 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 ---
 
 <p align="center">
-  Desenvolvido com foco em segurança, observabilidade e simplicidade.
+  <strong>Desenvolvido por <a href="https://github.com/44lain" target="_blank" rel="noopener noreferrer">-lain</a></strong>
 </p>
