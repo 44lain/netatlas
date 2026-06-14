@@ -29,7 +29,15 @@ def _request(
     try:
         with urllib.request.urlopen(req, timeout=120) as response:
             payload = response.read().decode("utf-8")
-            return json.loads(payload) if payload else {}
+            if not payload:
+                return {}
+            try:
+                return json.loads(payload)
+            except json.JSONDecodeError as exc:
+                preview = payload.strip()[:200]
+                raise PlatformError(
+                    f"Resposta inválida da API (esperado JSON): {preview}"
+                ) from exc
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="ignore")
         raise PlatformError(f"HTTP {exc.code}: {detail}") from exc
@@ -42,14 +50,7 @@ def _api_base(api_url: str) -> str:
 
 
 def check_health(api_url: str) -> None:
-    url = f"{_api_base(api_url)}/api/health"
-    req = urllib.request.Request(url, method="GET", headers={"Accept": "application/json"})
-    try:
-        with urllib.request.urlopen(req, timeout=30) as response:
-            payload = json.loads(response.read().decode("utf-8"))
-    except urllib.error.URLError as exc:
-        raise PlatformError(f"Falha de conexão: {exc.reason}") from exc
-
+    payload = _request("GET", f"{_api_base(api_url)}/api/health", token=None)
     status = payload.get("data", {}).get("status")
     if status != "ok":
         raise PlatformError("Health check falhou.")

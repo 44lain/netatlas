@@ -7,6 +7,8 @@ const ROTAS_AUTH = ["/login", "/register", "/forgot-password"];
 function rotaPublica(pathname: string): boolean {
   if (ROTAS_PUBLICAS.includes(pathname)) return true;
   if (pathname.startsWith("/auth/")) return true;
+  // APIs autenticam via JWT (cookie) ou Bearer (agente) nos Route Handlers
+  if (pathname.startsWith("/api/")) return true;
   return false;
 }
 
