@@ -14,9 +14,10 @@ import {
 
 async function DashboardContent() {
   const hasScan = await hasAnyScan();
+  const apiUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   if (!hasScan) {
-    return <DashboardEmptyState />;
+    return <DashboardEmptyState apiUrl={apiUrl} />;
   }
 
   const [metrics, devices] = await Promise.all([getDashboardMetrics(), getRecentDevices()]);

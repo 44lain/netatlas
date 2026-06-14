@@ -2,6 +2,12 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 
+const NAV_ITEMS = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/agents", label: "Agentes" },
+  { href: "/inventory", label: "Inventário" },
+] as const;
+
 export default async function DashboardLayout({
   children,
 }: Readonly<{
@@ -21,12 +27,15 @@ export default async function DashboardLayout({
           </Link>
         </div>
         <nav className="flex flex-col gap-1 p-3 text-sm">
-          <Link
-            href="/dashboard"
-            className="bg-sidebar-accent text-sidebar-accent-foreground rounded-md px-3 py-2 font-medium"
-          >
-            Dashboard
-          </Link>
+          {NAV_ITEMS.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="hover:bg-sidebar-accent hover:text-sidebar-accent-foreground rounded-md px-3 py-2 font-medium"
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </aside>
       <div className="flex flex-1 flex-col">

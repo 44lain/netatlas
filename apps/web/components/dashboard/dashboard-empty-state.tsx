@@ -1,7 +1,14 @@
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Terminal } from "lucide-react";
 
-export function DashboardEmptyState() {
+interface DashboardEmptyStateProps {
+  apiUrl?: string;
+}
+
+export function DashboardEmptyState({ apiUrl = "https://netatlas.vercel.app" }: DashboardEmptyStateProps) {
   return (
     <Card className="border-dashed">
       <CardHeader className="text-center">
@@ -10,17 +17,19 @@ export function DashboardEmptyState() {
         </div>
         <CardTitle>Nenhum scan realizado</CardTitle>
         <CardDescription>
-          Instale o NetAtlas Agent na sua rede local para descobrir dispositivos, portas abertas
-          e riscos de segurança.
+          Registre um agente e execute um scan na sua rede local para ver métricas aqui.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 text-center text-sm text-muted-foreground">
+        <Link href="/agents" className={cn(buttonVariants(), "inline-flex")}>
+          Registrar agente
+        </Link>
         <div className="mx-auto max-w-md space-y-2 rounded-lg bg-muted/50 p-4 text-left font-mono text-xs">
-          <p># 1. Registre um agente (Sprint 4)</p>
-          <p># 2. Execute na rede local:</p>
-          <p className="text-foreground">netatlas scan --token SEU_TOKEN --api https://netatlas.vercel.app</p>
+          <p># Após registrar, execute na rede local:</p>
+          <p className="text-foreground">
+            netatlas scan --token SEU_TOKEN --agent-id ID --api {apiUrl}
+          </p>
         </div>
-        <p>Os resultados aparecerão aqui automaticamente após o primeiro scan.</p>
       </CardContent>
     </Card>
   );

@@ -7,6 +7,7 @@ import time
 from netatlas import __version__
 from netatlas.discovery import detect_local_network, discover_hosts
 from netatlas.models import DeviceResult, ScanResult
+from netatlas.platform import PlatformError, upload_scan
 from netatlas.reporter import print_scan_result
 from netatlas.scanner import scan_host_ports
 
@@ -50,6 +51,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--quiet",
         action="store_true",
         help="Suprimir mensagens de progresso no stderr",
+    )
+    scan_parser.add_argument(
+        "--token",
+        help="Token Bearer do agente (envia resultados à plataforma)",
+    )
+    scan_parser.add_argument(
+        "--agent-id",
+        help="UUID do agente registrado no dashboard",
+    )
+    scan_parser.add_argument(
+        "--api",
+        help="URL base da plataforma (ex: https://netatlas.vercel.app)",
     )
 
     return parser
@@ -101,7 +114,24 @@ def run_scan(args: argparse.Namespace) -> int:
     duration = round(time.monotonic() - started, 2)
     result = ScanResult(network=network, devices=devices, duration_seconds=duration)
 
-    print_scan_result(result, output_file=args.output)
+    if args.token or args.api or args.agent_id:
+        if not (args.token and args.api and args.agent_id):
+            print(
+                "Erro: --token, --agent-id e --api são obrigatórios juntos para envio.",
+                file=sys.stderr,
+            )
+            return 1
+        _log("Enviando resultados para a plataforma...", args.quiet)
+        try:
+            upload_scan(args.api, args.token, args.agent_id, result)
+        except PlatformError as exc:
+            print(f"Erro: {exc}", file=sys.stderr)
+            return 2
+        _log("Resultados enviados com sucesso.", args.quiet)
+
+    if args.output or not (args.token and args.api):
+        print_scan_result(result, output_file=args.output)
+
     _log(f"Scan concluído em {duration}s.", args.quiet)
     return 0
 

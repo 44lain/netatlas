@@ -22,24 +22,18 @@ pip install -e ".[dev]"
 netatlas --help
 netatlas scan --help
 
-# Scan completo (detecta rede local automaticamente)
-netatlas scan
+# Após registrar, execute na rede local:
+netatlas scan --token SEU_TOKEN --agent-id ID --api https://netatlas.vercel.app
 
-# Apenas descoberta, sem portas
-netatlas scan --no-ports
-
-# Rede específica + salvar JSON
-netatlas scan --network 192.168.1.0/24 -o resultado.json
-
-# Portas customizadas
-netatlas scan --ports 22,80,443,8080
+# Ou apenas scan local (sem enviar):
+netatlas scan --no-ports -o resultado.json
 ```
 
 ## Saída
 
 JSON no stdout com dispositivos, portas abertas, MAC, hostname e fabricante (OUI).
 
-Integração com a plataforma web (`--token`, `--api`) — Sprint 4.
+Integração com a plataforma: `--token`, `--agent-id` e `--api` (registre o agente em `/agents`).
 
 ## Testes
 

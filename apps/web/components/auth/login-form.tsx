@@ -48,7 +48,7 @@ export function LoginForm({ redirectTo, authError }: LoginFormProps) {
               <p className="text-destructive text-sm">{state.fieldErrors.email[0]}</p>
             ) : null}
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 pb-6">
             <Label htmlFor="password">Senha</Label>
             <Input
               id="password"
