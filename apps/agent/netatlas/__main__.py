@@ -1,12 +1,8 @@
 """Ponto de entrada do NetAtlas Agent."""
 
-from netatlas import __version__
+import sys
 
-
-def main() -> None:
-    print(f"NetAtlas Agent v{__version__}")
-    print("Use 'netatlas scan' — implementação na Sprint 3.")
-
+from netatlas.cli import main
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
