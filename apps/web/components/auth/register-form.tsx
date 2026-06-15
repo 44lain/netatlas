@@ -71,7 +71,7 @@ export function RegisterForm() {
             ) : null}
           </div>
         </div>
-        <div className="flex flex-col gap-4 border-t p-6 pt-0">
+        <div className="flex flex-col gap-4 border-t p-6 pt-6">
           <Button type="submit" className="cyber-cta-glow w-full" disabled={pending}>
             {pending ? "Criando…" : "Criar conta"}
           </Button>

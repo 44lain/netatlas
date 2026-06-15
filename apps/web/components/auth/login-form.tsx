@@ -41,7 +41,7 @@ export function LoginForm({ redirectTo, authError }: LoginFormProps) {
               <p className="text-destructive text-sm">{state.fieldErrors.email[0]}</p>
             ) : null}
           </div>
-          <div className="space-y-2 pb-6">
+          <div className="space-y-2">
             <Label htmlFor="password">Senha</Label>
             <Input
               id="password"
@@ -56,7 +56,7 @@ export function LoginForm({ redirectTo, authError }: LoginFormProps) {
             ) : null}
           </div>
         </div>
-        <div className="flex flex-col gap-4 border-t p-6 pt-0">
+        <div className="flex flex-col gap-4 border-t p-6 pt-6">
           <Button type="submit" className="cyber-cta-glow w-full" disabled={pending}>
             {pending ? "Entrando…" : "Entrar"}
           </Button>
